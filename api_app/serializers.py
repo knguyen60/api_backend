@@ -11,14 +11,13 @@ from .models import User, Viewer, Role, Camera
 from datetime import datetime
 from rest_framework_jwt.settings import api_settings
 
-#User= get_user_model()
+# User= get_user_model()
 
 
-
-#register user
+# register user
 class UserCreateSerializer(ModelSerializer):
-    #email = EmailField(label = 'Email Address')
-    #email2 = EmailField(label='Confirm Email')
+    # email = EmailField(label = 'Email Address')
+    # email2 = EmailField(label='Confirm Email')
 
     class Meta:
         model = User
@@ -30,8 +29,8 @@ class UserCreateSerializer(ModelSerializer):
             # 'role',
             ]
         extra_kwargs = {"password": {"write_only": True}}
-        #write_only = 'password'
-        #fields='__all__'
+        # write_only = 'password'
+        # fields='__all__'
 
     # def validated_email(self, value):
     #     data = self
@@ -47,23 +46,22 @@ class UserCreateSerializer(ModelSerializer):
         password = validated_data['password']
         # role = validated_data['role']
         user_obj = User(
-                email = email,
-                username = username,
-               # role = role,
-               # password_hash=password_hash
+                email=email,
+                username=username,
+                # role = role,
+                # password_hash=password_hash
             )
         user_obj.set_password(password)
         user_obj.save()
         return validated_data
 
-#login serializer
 
-
+# login serializer
 class UserLoginSerializer(ModelSerializer):
     token = CharField(allow_blank=True, read_only=True)
-    #dropbox_token = CharField(allow_blank=True, read_only=True)
+    # dropbox_token = CharField(allow_blank=True, read_only=True)
     username = CharField(required=False, allow_blank=True)
-    email = EmailField(label= 'Email Address', required=False, allow_blank=True)
+    email = EmailField(label='Email Address', required=False, allow_blank=True)
     full_name = CharField(read_only=True, allow_blank=True)
 
     class Meta:
@@ -82,7 +80,7 @@ class UserLoginSerializer(ModelSerializer):
 
     def validate(self, data):
         user_obj = None
-        email = data.get("email",None)
+        email = data.get("email", None)
         username = data.get("username", None)
         password = data["password"]
         if not email and not username:
@@ -125,43 +123,52 @@ class UserLoginSerializer(ModelSerializer):
 
 
 class UserProfileSerializer(ModelSerializer):
-  class Meta:
+
+    class Meta:
         model = User
         fields = [
             'first_name', 
             'last_name',  
-            ]
-        def update(self, instance, validated_data):
-            instance.first_name = validated_data.get('first_name', instance.first_name)
-            instance.last_name = validated_data.get('last_name',instance.last_name)
-            instance.save()
-            return instance
+        ]
+
+    def update(self, instance, validated_data):
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()
+        return instance
 
 
 class CameraSerializer(ModelSerializer):
     
     class Meta:
-        model= Camera
-        fields='__all__'
+        model = Camera
+        fields = [
+            'name',
+            'address',
+            'uid',
+        ]
 
-        read_only_fields = ("created_at","is_active")
-    
-        def get_camera_by_user (self, request, arg):
-            camera = Camera.objects.filter(Q(uid= arg))
+        # read_only_fields = ("created_at", "is_active")
+
+    def get_camera(self, data):
+        uid = data.get('uid', None)
+        camera = Camera.objects.filter(Q(uid=uid))
+        return camera
 
 
 class ViewerSerializer(ModelSerializer):
 
     class Meta:
-        model= Viewer
-        fields=[
+        model = Viewer
+        fields = [
             'master',
-            'viewer']
-        #fields='__all__'
+            'viewer'
+        ]
+        # fields='__all__'
 
 
 class RoleSerializer(ModelSerializer):
 
     class Meta:
-        model= Role
-        fields='__all__'
+        model = Role
+        fields = '__all__'

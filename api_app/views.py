@@ -28,49 +28,62 @@ from rest_framework.permissions import(
 )
 
 
-#user register
+# user register
 class UserRegister(generics.CreateAPIView):
-    permission_classes= [AllowAny]
+    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
 
-#login
+
+# login
 class UserLogin(APIView):
     permission_classes= [AllowAny]
     serializer_class = UserLoginSerializer
 
     def post(self, request, *args, **kwargs):
-        data= request.data
+        data = request.data
         serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            new_data= serializer.data
+            new_data = serializer.data
             return Response(new_data, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-            
+
+
 class UserProfile(generics.RetrieveUpdateAPIView):
     permission_classes= [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
 
 
-class CameraList(generics.ListCreateAPIView):
-    permission_classes= [AllowAny]
-    queryset = Camera.objects.filter(uid=29).order_by('-created_at').exclude(cid=1)
-    serializer_class = CameraSerializer
+class CameraList(APIView):
+    permission_classes = [AllowAny]
+    # queryset = Camera.objects.filter(uid=29).order_by('-created_at').exclude(cid=1)
+    # queryset = Camera.objects.all()
+
+    def get(self, request):
+        data = request.data
+        serializer = CameraSerializer(data=data)
+        queryset = serializer.get_camera(data)
+        if serializer.is_valid(raise_exception=True):
+            new_data = serializer.data
+            return Response(queryset, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
 
 class CameraDetail(generics.ListAPIView):
-    permission_classes= [AllowAny]
+    permission_classes = [AllowAny]
     queryset = Camera.objects.filter(uid=29)
     serializer_class = CameraSerializer
 
 
-#get, post roles
+# get, post roles
 class RoleList(generics.ListCreateAPIView):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
-#get, update, delete role with role_id
-#api/role/(?P<pk>[0-9]+)/ , put method need to have ending /
+
+# get, update, delete role with role_id
+# api/role/(?P<pk>[0-9]+)/ , put method need to have ending /
 class RoleDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer  

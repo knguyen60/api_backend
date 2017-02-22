@@ -169,7 +169,7 @@ class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email,username,  password, **extra_fields)
+        return self._create_user(email, username,  password, **extra_fields)
 
     def create_superuser(self, email, username, password, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
