@@ -183,10 +183,9 @@ class UserManager(BaseUserManager):
         return self._create_user( email, username, password, **extra_fields)
 
 
-
 class User(AbstractBaseUser):
 
-    objects =  UserManager()
+    objects = UserManager()
 
     google_id = models.CharField(max_length=255, blank=True)
     dropbox_id = models.CharField(max_length=255, blank=True)
