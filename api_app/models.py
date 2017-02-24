@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from datetime import datetime
 
 
 class AuthGroup(models.Model):
@@ -81,8 +82,8 @@ class Camera(models.Model):
     cid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=250)
-    uid = models.ForeignKey('User', models.DO_NOTHING, db_column='uid', blank=True, null=True)
-    created_at = models.DateTimeField()
+    uid = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True)
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
     is_active = models.BooleanField(default=True, verbose_name='camera is activated')
 
     class Meta:
