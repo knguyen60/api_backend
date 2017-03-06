@@ -82,13 +82,16 @@ class Camera(models.Model):
     cid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=250)
-    uid = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True)
+    uid = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True, related_name='cameras')
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     is_active = models.BooleanField(default=True, verbose_name='camera is activated')
 
     class Meta:
         managed = True
         db_table = 'camera'
+
+    def __unicode__(self):
+        return '%d: %s %s' % (self.cid, self.name, self.address)
 
 
 class DjangoAdminLog(models.Model):
@@ -163,12 +166,12 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
-        user = self.model(email=email,username=username, **extra_fields)
+        user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, username, password=None, **extra_fields):
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(email, username,  password, **extra_fields)
 
@@ -176,7 +179,6 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_admin', True)
         extra_fields.setdefault('is_active', True)
-
 
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
@@ -205,7 +207,6 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False, verbose_name='staff account')
     is_superuser = models.IntegerField(default=False)
 
-
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
     
@@ -233,7 +234,6 @@ class User(AbstractBaseUser):
     class Meta:
         managed = True
         db_table = 'user'
-
 
 
 class Viewer(models.Model):

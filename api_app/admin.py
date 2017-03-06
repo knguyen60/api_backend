@@ -4,7 +4,7 @@ from api_app import models
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'username', 'email']
+    list_display = ['id', 'username', 'email', 'is_active']
 admin.site.register(models.User, UserAdmin)
 
 

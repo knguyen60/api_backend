@@ -19,10 +19,18 @@ from django.contrib import admin
 #from api_app import urls
 from api_app.routes import api_router
 from api_app import views
+import rest_framework_jwt.views
+import djoser.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api_app.urls')),
+    url(r'^auth/', include('djoser.urls')),
+
+    # url(r'^auth/login', rest_framework_jwt.views.obtain_jwt_token),  # using JSON web token
+    # url(r'^auth/register', djoser.views.RegistrationView.as_view()),
+    # url(r'^auth/password/reset', djoser.views.PasswordResetView.as_view()),
+    # url(r'^auth/password/reset/confirm', djoser.views.PasswordResetConfirmView.as_view()),
     # url(r'^api/register/$', views.UserRegister.as_view(), name='user'),
     # url(r'^api/camera/$', views.CameraList.as_view(), name='role'),
     # url(r'^api/camera/(?P<pk>[0-9]+)/$', views.CameraDetail.as_view(), name='role_detail'),

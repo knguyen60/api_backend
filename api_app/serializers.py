@@ -7,6 +7,8 @@ from rest_framework.serializers import (
     SerializerMethodField,
     ValidationError,
     PrimaryKeyRelatedField,
+    RelatedField,
+    HyperlinkedRelatedField,
 )
 from .models import User, Viewer, Role, Camera
 from datetime import datetime
@@ -23,8 +25,8 @@ class UserCreateSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'username', 
             'email',
+            'username',
             #'email2', 
             'password',
             # 'role',
@@ -57,6 +59,38 @@ class UserCreateSerializer(ModelSerializer):
         return validated_data
 
 
+class UserDetailSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'id'
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            ]
+
+
+class CameraSerializer(ModelSerializer):
+    user = UserDetailSerializer(read_only=True)
+
+    class Meta:
+        model = Camera
+        fields = [
+            'cid',
+            'name',
+            'address',
+            'user',
+            'created_at',
+            'is_active',
+            ]
+
+        read_only_fields = ("created_at", "is_active")
+
+
+
+
 # login serializer
 class UserLoginSerializer(ModelSerializer):
     token = CharField(allow_blank=True, read_only=True)
@@ -64,8 +98,8 @@ class UserLoginSerializer(ModelSerializer):
     username = CharField(required=False, allow_blank=True)
     email = EmailField(label='Email Address', required=False, allow_blank=True)
     full_name = CharField(read_only=True, allow_blank=True)
-    camera = PrimaryKeyRelatedField(many=True, read_only=True)
-    # camera= CameraSerializer(many=True, read_only=True)
+    # camera = PrimaryKeyRelatedField(many=True, read_only=True)
+    cameras = CameraSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -76,8 +110,8 @@ class UserLoginSerializer(ModelSerializer):
             'password',
             'full_name',
             'token',
-            'dropbox_token',
-            'camera',
+            'last_login',
+            'cameras',
         ]
         extra_kwargs = {"password": {"write_only": True}}
         read_only_fields = ('dropbox_token',)
@@ -127,7 +161,7 @@ class UserLoginSerializer(ModelSerializer):
         data["token"] = jwt_encode_handler(payload)
         data["full_name"] = user_obj.get_full_name()
         data["dropbox_token"] = user_obj.dropbox_token
-        data["camera"] = queryset
+        data["cameras"] = queryset
         return data
 
 
@@ -147,33 +181,24 @@ class UserProfileSerializer(ModelSerializer):
         return instance
 
 
-class UserDetailSerializer(ModelSerializer):
+class UserSerializer(ModelSerializer):
+    # cameras = RelatedField(many=True)
+    cameras = CameraSerializer(many=True, read_only=True)
+
     class Meta:
         model = User
         fields = [
-            'id'
+            'id',
             'username',
             'email',
             'first_name',
             'last_name',
+            'cameras',
         ]
 
-
-class CameraSerializer(ModelSerializer):
-    user = UserDetailSerializer(read_only=True)
-
-    class Meta:
-        model = Camera
-        fields = [
-            'cid',
-            'name',
-            'address',
-            'user',
-            'created_at',
-            'is_active',
-        ]
-
-        read_only_fields = ("created_at", "is_active")
+        read_only_fields = (
+            User.USERNAME_FIELD,
+        )
 
 
 class ViewerSerializer(ModelSerializer):
