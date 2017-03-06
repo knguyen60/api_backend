@@ -234,8 +234,8 @@ DJOSER = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# Host for sending e-mail.
+#
+# Host for sending e-mailS
 EMAIL_HOST = 'smtp.gmail.com'
 
 # Port for sending e-mail.
