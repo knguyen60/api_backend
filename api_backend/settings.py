@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_jwt',
     'api_app.apps.ApiAppConfig',
+    'corsheaders',
 
 ]
 
 MIDDLEWARE_CLASSES = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,6 +60,8 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'api_backend.urls'
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 TEMPLATES = [
     {

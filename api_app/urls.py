@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^profile/(?P<pk>[0-9]+)$', views.UserProfile.as_view(), name='profile'),
     url(r'^camera/$', views.CameraList.as_view(), name='role'),
     # url(r'^camera/$', views.CameraListByUser.as_view(), name='role'),
-    url(r'^camera/(?P<pk>[0-9]+)/$', views.CameraDetail.as_view(), name='role_detail'),
+    url(r'^camera/(?P<pk>[0-9]+)/$', views.CameraDetail.as_view(), name='camera_detail'),
     url(r'^role/$', views.RoleList.as_view(), name='role'),
     url(r'^role/(?P<pk>[0-9]+)/$', views.RoleDetail.as_view(), name='role_detail'),
     url(r'^auth/token/', obtain_jwt_token),
