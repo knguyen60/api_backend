@@ -1,6 +1,7 @@
 from django.contrib import admin
 # Register your models here.
 from api_app import models
+from django_ses.views import dashboard
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -17,3 +18,4 @@ class RoleAdmin(admin.ModelAdmin):
     list_display = ['description']
 admin.site.register(models.Role, RoleAdmin)
 
+# admin.site.register('django-ses', dashboard)

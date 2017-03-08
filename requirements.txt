@@ -1,5 +1,8 @@
+boto==2.46.1
 Django==1.9
 django-cors-headers==2.0.2
+django-ses==0.8.1
+django-smtp-ssl==1.0
 djangorestframework==3.5.3
 djangorestframework-jwt==1.9.0
 djoser==0.5.4

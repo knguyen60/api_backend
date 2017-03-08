@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_jwt',
     'api_app.apps.ApiAppConfig',
     'corsheaders',
+    'django_ses',
 
 ]
 
@@ -237,16 +238,30 @@ DJOSER = {
     },
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#
-# Host for sending e-mailS
-EMAIL_HOST = 'smtp.gmail.com'
+##Normal SMTP
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# # Host for sending e-mailS
+# EMAIL_HOST = 'smtp.gmail.com'
+# # Port for sending e-mail.
+# EMAIL_PORT = 587
+# # Optional SMTP authentication information for EMAIL_HOST.
+# EMAIL_HOST_USER = 'khanhnguyen19101989@gmail.com'
+# EMAIL_HOST_PASSWORD = ''
 
-# Port for sending e-mail.
-EMAIL_PORT = 587
+##SSL with SES SMTP setting
+# EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+# EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = 'AKIAJMFZR4TKDEUF5JLQ'
+# EMAIL_HOST_PASSWORD = 'ApbBh5FTUy8HR8kSTLyZ/Avm7nSiGNWlIJONngeCo4ro'
+# DEFAULT_FROM_EMAIL = 'khanhnguyen19101989@gmail.com'
+# EMAIL_USE_SSL = True
+# EMAIL_USE_TLS = False
 
-# Optional SMTP authentication information for EMAIL_HOST.
-EMAIL_HOST_USER = 'khanhnguyen19101989@gmail.com'
-EMAIL_HOST_PASSWORD = 'lopaka1989'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+##Using aws web service
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = 'AKIAIRT7CHS3BRKR373Q'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_SES_REGION_NAME = 'us-east-1'
+AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
+DEFAULT_FROM_EMAIL = 'khanhnguyen19101989@gmail.com'

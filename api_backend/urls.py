@@ -37,3 +37,5 @@ urlpatterns = [
     # url(r'^api/role/$', views.RoleList.as_view(), name='role'),
     # url(r'^api/role/(?P<pk>[0-9]+)/$', views.RoleDetail.as_view(), name='role_detail'),
 ]
+
+urlpatterns += (url(r'^admin/django-ses/', include('django_ses.urls')),)
