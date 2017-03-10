@@ -16,12 +16,17 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from adminplus.sites import AdminSitePlus
+
 #from api_app import urls
 from api_app.routes import api_router
 from api_app import views
 import rest_framework_jwt.views
 import djoser.views
 
+
+admin.site = AdminSitePlus()
+admin.autodiscover()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api_app.urls')),

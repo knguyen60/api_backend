@@ -33,7 +33,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
+    'django.contrib.admin.apps.SimpleAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'api_app.apps.ApiAppConfig',
     'corsheaders',
     'django_ses',
+    'adminplus',
 
 ]
 
@@ -224,7 +226,8 @@ DJOSER = {
     'SERIALIZERS': {},
     'SERIALIZERS': {
         'activation': 'djoser.serializers.ActivationSerializer',
-        'login': 'djoser.serializers.LoginSerializer',
+        # 'login': 'djoser.serializers.LoginSerializer',
+        'login': 'api_app.serializers.UserLoginSerializer',
         'password_reset': 'djoser.serializers.PasswordResetSerializer',
         'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
         'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
@@ -260,8 +263,8 @@ DJOSER = {
 
 ##Using aws web service
 EMAIL_BACKEND = 'django_ses.SESBackend'
-AWS_ACCESS_KEY_ID = 'AKIAIRT7CHS3BRKR373Q'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 AWS_SES_REGION_NAME = 'us-east-1'
 AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
 DEFAULT_FROM_EMAIL = 'khanhnguyen19101989@gmail.com'

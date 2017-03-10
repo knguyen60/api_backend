@@ -114,7 +114,7 @@ class UserLoginSerializer(ModelSerializer):
             'cameras',
         ]
         extra_kwargs = {"password": {"write_only": True}}
-        read_only_fields = ('dropbox_token',)
+        read_only_fields = ('last_login',)
 
     def validate(self, data):
         user_obj = None

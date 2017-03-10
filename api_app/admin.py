@@ -18,4 +18,4 @@ class RoleAdmin(admin.ModelAdmin):
     list_display = ['description']
 admin.site.register(models.Role, RoleAdmin)
 
-# admin.site.register('django-ses', dashboard)
+admin.site.register_view('django-ses', dashboard, 'Django SES Stats')

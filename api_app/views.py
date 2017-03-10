@@ -75,8 +75,8 @@ class CameraList(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-class CameraDetail(generics.ListAPIView):
-    permission_classes = [AllowAny]
+class CameraDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Camera.objects.all()
     serializer_class = CameraSerializer
 
