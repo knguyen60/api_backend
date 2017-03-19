@@ -12,14 +12,16 @@ from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import User, Role, Camera
+from .models import User, Role, Camera, Schedule
 
 from .serializers import (
     UserCreateSerializer, 
     UserLoginSerializer,
     UserProfileSerializer,
     RoleSerializer, 
-    CameraSerializer, 
+    CameraSerializer,
+    GoogleTokenSerializer,
+    ScheduleSerilalizer,
     ViewerSerializer)
 
 from rest_framework import generics
@@ -79,6 +81,32 @@ class CameraDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Camera.objects.all()
     serializer_class = CameraSerializer
+
+
+class GoogleToken(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = GoogleTokenSerializer
+
+    # def update(self, request, *args, **kwargs):
+    #     queryset = User.objects.filter(id=request.user.id)
+    #     serializer = GoogleTokenSerializer(queryset, *args)
+    #     return Response(serializer.data, status=HTTP_200_OK)
+
+
+class ScheduleCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerilalizer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class ScheduleDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerilalizer
 
 
 # get, post roles

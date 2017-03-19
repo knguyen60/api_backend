@@ -3,6 +3,9 @@ from django.db.models import Q
 from rest_framework.serializers import (
     EmailField,
     CharField,
+    BooleanField,
+    TimeField,
+    DateField,
     ModelSerializer,
     SerializerMethodField,
     ValidationError,
@@ -10,8 +13,9 @@ from rest_framework.serializers import (
     RelatedField,
     HyperlinkedRelatedField,
 )
-from .models import User, Viewer, Role, Camera
-from datetime import datetime
+from .models import User, Viewer, Role, Camera, Schedule
+from datetime import datetime, date
+from time import gmtime
 from rest_framework_jwt.settings import api_settings
 
 # User= get_user_model()
@@ -89,8 +93,6 @@ class CameraSerializer(ModelSerializer):
         read_only_fields = ("created_at", "is_active")
 
 
-
-
 # login serializer
 class UserLoginSerializer(ModelSerializer):
     token = CharField(allow_blank=True, read_only=True)
@@ -154,7 +156,7 @@ class UserLoginSerializer(ModelSerializer):
         payload = jwt_payload_handler(user_obj)
 
         if api_settings.JWT_ALLOW_REFRESH:
-            payload['orig_iat'] = timegm(datetime.utcnow().utctimetuple())
+            payload['orig_iat'] = gmtime(datetime.utcnow().utctimetuple())
 
         data["id"] = user_obj.id
         data["email"] = user_obj.email
@@ -217,3 +219,63 @@ class RoleSerializer(ModelSerializer):
     class Meta:
         model = Role
         fields = '__all__'
+
+
+class GoogleTokenSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            'android_token',
+        ]
+
+    def update(self, instance, validated_data):
+        instance.android_token = validated_data.get('android_token', instance.android_token)
+        instance.save()
+        return instance
+
+
+class ScheduleSerilalizer(ModelSerializer):
+
+    class Meta:
+        model = Schedule
+        fields =[
+            'is_active',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday',
+            'sunday',
+            'time_from',
+            'time_to',
+        ]
+
+
+class CheckScheduleSerializer(ModelSerializer):
+    is_active = BooleanField()
+    monday = BooleanField()
+    tuesday = BooleanField()
+    wednesday = BooleanField()
+    thursday = BooleanField()
+    friday = BooleanField()
+    saturday = BooleanField()
+    sunday = BooleanField()
+    time_from = TimeField()
+    time_to = TimeField()
+    current_date = DateField()
+    current_time = TimeField()
+    signal = BooleanField()
+    weekday = datetime.utcnow().isoweekday()
+
+    class Meta:
+        model = Schedule
+        fields =[
+            'signal',
+        ]
+
+        read_only_fields = (
+            'signal',
+        )
+

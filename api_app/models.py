@@ -90,7 +90,7 @@ class Camera(models.Model):
         managed = True
         db_table = 'camera'
 
-    def __unicode__(self):
+    def __str__(self):
         return '%d: %s %s' % (self.cid, self.name, self.address)
 
 
@@ -195,7 +195,7 @@ class User(AbstractBaseUser):
     username = models.CharField(unique=True, max_length=30, default= 'username')
     email = models.CharField(unique=True, max_length=255)
     api_key = models.CharField(max_length=32)
-    goodle_token = models.CharField(max_length=255, blank=True)
+    android_token = models.CharField(max_length=255, blank=True)
     dropbox_token = models.CharField(max_length=255, blank=True)
     # role = models.ForeignKey('Role', models.DO_NOTHING, db_column='role', default='1')
     is_confirmed = models.IntegerField(blank=True, null=True)
@@ -244,3 +244,22 @@ class Viewer(models.Model):
     class Meta:
         managed = True
         db_table = 'viewer'
+
+
+class Schedule(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, primary_key=True)
+    is_active = models.BooleanField(default=True)
+    monday = models.BooleanField(default=True)
+    tuesday = models.BooleanField(default=True)
+    wednesday = models.BooleanField(default=True)
+    thursday = models.BooleanField(default=True)
+    friday = models.BooleanField(default=True)
+    saturday = models.BooleanField(default=True)
+    sunday = models.BooleanField(default=True)
+    time_from = models.TimeField(default='00:00:00')
+    time_to = models.TimeField(default='23:59:59')
+
+    class Meta:
+        managed = True
+        db_table = 'schedule'
+
