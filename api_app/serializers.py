@@ -314,6 +314,9 @@ class ScheduleSignalSerializer(ModelSerializer):
         lookup_field = 'user__username'
 
 
+# check current weekday is true/false
+# current is an integer 0-6
+# weekday is boolean array monday-sunday
 def check_weekday(current, weekday):
     return weekday[current]
 

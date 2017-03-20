@@ -14,8 +14,9 @@ class CameraAdmin(admin.ModelAdmin):
 admin.site.register(models.Camera, CameraAdmin)
 
 
-class RoleAdmin(admin.ModelAdmin):
-    list_display = ['description']
-admin.site.register(models.Role, RoleAdmin)
+class ScheduleAdmin(admin.ModelAdmin):
+    list_display = ['is_active', 'monday', 'tuesday', 'wednesday', 'thursday',
+                    'friday', 'saturday', 'sunday', 'time_from', 'time_to',]
+admin.site.register(models.Schedule, ScheduleAdmin)
 
 admin.site.register_view('django-ses', dashboard, 'Django SES Stats')
