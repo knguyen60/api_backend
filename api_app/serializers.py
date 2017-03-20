@@ -238,12 +238,20 @@ class GoogleTokenSerializer(ModelSerializer):
 
 class ScheduleSerializer(ModelSerializer):
     # username = CharField(source='user.username')
-    # user = UserSerializer(
-    #     read_only=True,
-    # )
+    # user = UserSerializer(required=False)
+    signal = SerializerMethodField()
+
+    def get_signal(self, obj):
+        if obj.is_active:
+            return obj.time_to
+        else:
+            return obj.time_from
 
     class Meta:
         model = Schedule
+
+        # exclude = ['user',
+        #  ]
         fields = [
             'is_active',
             'monday',
@@ -255,26 +263,31 @@ class ScheduleSerializer(ModelSerializer):
             'sunday',
             'time_from',
             'time_to',
+            'signal',
         ]
-        # read_only_fields = ('user',)
+
         lookup_field = 'user__username'
 
 
 class CheckScheduleSerializer(ModelSerializer):
-    is_active = BooleanField()
-    monday = BooleanField()
-    tuesday = BooleanField()
-    wednesday = BooleanField()
-    thursday = BooleanField()
-    friday = BooleanField()
-    saturday = BooleanField()
-    sunday = BooleanField()
-    time_from = TimeField()
-    time_to = TimeField()
-    current_date = DateField()
-    current_time = TimeField()
-    signal = BooleanField()
+    # is_active = BooleanField()
+    # monday = BooleanField()
+    # tuesday = BooleanField()
+    # wednesday = BooleanField()
+    # thursday = BooleanField()
+    # friday = BooleanField()
+    # saturday = BooleanField()
+    # sunday = BooleanField()
+    # time_from = TimeField()
+    # time_to = TimeField()
+    # current_date = DateField()
+    # current_time = TimeField()
+    signal = SerializerMethodField('get_signal')
     weekday = datetime.utcnow().isoweekday()
+
+    def get_signal(self, obj):
+        monday = obj.monday
+
 
     class Meta:
         model = Schedule
@@ -284,8 +297,18 @@ class CheckScheduleSerializer(ModelSerializer):
         read_only_fields = (
             'signal',
         )
+        exclude = [
+            'is_active',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday',
+            'sunday',
+            'time_from',
+            'time_to',
+        ]
         lookup_field = 'user__username'
 
-    def validate(self, data):
 
-        return data
