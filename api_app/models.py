@@ -263,3 +263,7 @@ class Schedule(models.Model):
         managed = True
         db_table = 'schedule'
 
+    @property
+    def user__username(self):
+        return self.user.username
+

@@ -7,6 +7,7 @@ from rest_framework.serializers import (
     TimeField,
     DateField,
     ModelSerializer,
+    HyperlinkedModelSerializer,
     SerializerMethodField,
     ValidationError,
     PrimaryKeyRelatedField,
@@ -235,11 +236,15 @@ class GoogleTokenSerializer(ModelSerializer):
         return instance
 
 
-class ScheduleSerilalizer(ModelSerializer):
+class ScheduleSerializer(ModelSerializer):
+    # username = CharField(source='user.username')
+    # user = UserSerializer(
+    #     read_only=True,
+    # )
 
     class Meta:
         model = Schedule
-        fields =[
+        fields = [
             'is_active',
             'monday',
             'tuesday',
@@ -251,6 +256,8 @@ class ScheduleSerilalizer(ModelSerializer):
             'time_from',
             'time_to',
         ]
+        # read_only_fields = ('user',)
+        lookup_field = 'user__username'
 
 
 class CheckScheduleSerializer(ModelSerializer):
@@ -274,8 +281,11 @@ class CheckScheduleSerializer(ModelSerializer):
         fields =[
             'signal',
         ]
-
         read_only_fields = (
             'signal',
         )
+        lookup_field = 'user__username'
 
+    def validate(self, data):
+
+        return data

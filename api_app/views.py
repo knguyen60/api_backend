@@ -21,7 +21,7 @@ from .serializers import (
     RoleSerializer, 
     CameraSerializer,
     GoogleTokenSerializer,
-    ScheduleSerilalizer,
+    ScheduleSerializer,
     ViewerSerializer)
 
 from rest_framework import generics
@@ -97,7 +97,7 @@ class GoogleToken(generics.RetrieveUpdateAPIView):
 class ScheduleCreate(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerilalizer
+    serializer_class = ScheduleSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -105,8 +105,9 @@ class ScheduleCreate(generics.CreateAPIView):
 
 class ScheduleDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerilalizer
+    queryset = Schedule.objects.all().select_related('user')
+    serializer_class = ScheduleSerializer
+    lookup_field = 'user__username'
 
 
 # get, post roles
