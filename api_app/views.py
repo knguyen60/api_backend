@@ -22,6 +22,7 @@ from .serializers import (
     CameraSerializer,
     GoogleTokenSerializer,
     ScheduleSerializer,
+    ScheduleSignalSerializer,
     ViewerSerializer)
 
 from rest_framework import generics
@@ -107,6 +108,13 @@ class ScheduleDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Schedule.objects.all().select_related('user')
     serializer_class = ScheduleSerializer
+    lookup_field = 'user__username'
+
+
+class ScheduleSignal(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = Schedule.objects.all().select_related('user')
+    serializer_class = ScheduleSignalSerializer
     lookup_field = 'user__username'
 
 

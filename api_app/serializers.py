@@ -16,7 +16,7 @@ from rest_framework.serializers import (
 )
 from .models import User, Viewer, Role, Camera, Schedule
 from datetime import datetime, date
-from time import gmtime
+from time import gmtime, time
 from rest_framework_jwt.settings import api_settings
 
 # User= get_user_model()
@@ -242,10 +242,17 @@ class ScheduleSerializer(ModelSerializer):
     signal = SerializerMethodField()
 
     def get_signal(self, obj):
-        if obj.is_active:
-            return obj.time_to
+        weekday = [obj.monday, obj.tuesday, obj.wednesday, obj.thursday, obj.friday, obj.saturday, obj.sunday]
+        current = datetime.now()
+        current_weekday = current.weekday()
+        current_time = current.time()
+
+        if obj.is_active and check_weekday(current_weekday, weekday) and \
+                check_time(obj.time_from, obj.time_to, current_time):
+            return True
+
         else:
-            return obj.time_from
+            return False
 
     class Meta:
         model = Schedule
@@ -269,35 +276,27 @@ class ScheduleSerializer(ModelSerializer):
         lookup_field = 'user__username'
 
 
-class CheckScheduleSerializer(ModelSerializer):
-    # is_active = BooleanField()
-    # monday = BooleanField()
-    # tuesday = BooleanField()
-    # wednesday = BooleanField()
-    # thursday = BooleanField()
-    # friday = BooleanField()
-    # saturday = BooleanField()
-    # sunday = BooleanField()
-    # time_from = TimeField()
-    # time_to = TimeField()
-    # current_date = DateField()
-    # current_time = TimeField()
-    signal = SerializerMethodField('get_signal')
+class ScheduleSignalSerializer(ModelSerializer):
+    signal = SerializerMethodField()
     weekday = datetime.utcnow().isoweekday()
 
     def get_signal(self, obj):
-        monday = obj.monday
+        weekday = [obj.monday, obj.tuesday, obj.wednesday, obj.thursday, obj.friday, obj.saturday, obj.sunday]
+        current = datetime.now()
+        current_weekday = current.weekday()
+        current_time = current.time()
 
+        if obj.is_active and check_weekday(current_weekday, weekday) and \
+                check_time(obj.time_from, obj.time_to, current_time):
+            return True
+
+        else:
+            return False
 
     class Meta:
         model = Schedule
-        fields =[
-            'signal',
-        ]
-        read_only_fields = (
-            'signal',
-        )
         exclude = [
+            'user',
             'is_active',
             'monday',
             'tuesday',
@@ -309,6 +308,22 @@ class CheckScheduleSerializer(ModelSerializer):
             'time_from',
             'time_to',
         ]
+        read_only_fields = (
+            'signal',
+        )
         lookup_field = 'user__username'
+
+
+def check_weekday(current, weekday):
+    return weekday[current]
+
+
+def check_time(start, end, now):
+    """Return true if x is in the range [start, end]"""
+    if start <= end:
+        return start <= now <= end
+    else:
+        return start <= now or now <= end
+
 
 

@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^camera/(?P<pk>[0-9]+)/$', views.CameraDetail.as_view(), name='camera_detail'),
     url(r'^schedule/create/$', views.ScheduleCreate.as_view(), name='schedule_create'),
     url(r'^schedule/detail/(?P<user__username>[\w.@+-]+)/$', views.ScheduleDetail.as_view(), name='schedule_detail'),
+    url(r'^schedule/signal/(?P<user__username>[\w.@+-]+)/$', views.ScheduleSignal.as_view(), name='schedule_signal'),
     url(r'^role/(?P<pk>[0-9]+)/$', views.RoleDetail.as_view(), name='role_detail'),
     url(r'^role/$', views.RoleList.as_view(), name='role'),
     url(r'^role/(?P<pk>[0-9]+)/$', views.RoleDetail.as_view(), name='role_detail'),
