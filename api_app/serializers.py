@@ -14,7 +14,7 @@ from rest_framework.serializers import (
     RelatedField,
     HyperlinkedRelatedField,
 )
-from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification
+from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint
 from datetime import datetime, date
 from time import gmtime, time
 from rest_framework_jwt.settings import api_settings
@@ -332,7 +332,7 @@ class NotificationDeviceSerializer(ModelSerializer):
 
 class NotificationSerializer(ModelSerializer):
     class Meta:
-        model = NotificationDevice
+        model = Notification
         fields = [
             'email_notify',
             'android_notify',
@@ -345,6 +345,20 @@ class NotificationSerializer(ModelSerializer):
         instance.save()
         return instance
 
+
+class DeviceEndpointSerializer(ModelSerializer):
+    class Meta:
+        model = DeviceEndpoint
+        fields = [
+            'endpoint',
+            'device_data',
+        ]
+
+    def update(self, instance, validated_data):
+        instance.endpoint = validated_data.get('endpoint', instance.endpoint)
+        instance.device_data = validated_data.get('device_data', instance.device_data)
+        instance.save()
+        return instance
 
 # check current weekday is true/false
 # current is an integer 0-6
