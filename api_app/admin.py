@@ -15,8 +15,18 @@ admin.site.register(models.Camera, CameraAdmin)
 
 
 class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ['is_active', 'monday', 'tuesday', 'wednesday', 'thursday',
+    list_display = ['user', 'is_active', 'monday', 'tuesday', 'wednesday', 'thursday',
                     'friday', 'saturday', 'sunday', 'time_from', 'time_to',]
 admin.site.register(models.Schedule, ScheduleAdmin)
+
+
+class DeviceAdmin(admin.ModelAdmin):
+    list_display = ['user', 'type', 'endpoint', 'device_data']
+admin.site.register(models.NotificationDevice, DeviceAdmin)
+
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ['user', 'email_notify', 'android_notify']
+admin.site.register(models.Notification, NotificationAdmin)
 
 admin.site.register_view('django-ses', dashboard, 'Django SES Stats')

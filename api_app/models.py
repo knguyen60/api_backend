@@ -10,6 +10,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from datetime import datetime
+from django.db.models import signals
 
 
 class AuthGroup(models.Model):
@@ -81,7 +82,7 @@ class AuthUserUserPermissions(models.Model):
 class Camera(models.Model):
     cid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
-    address = models.CharField(max_length=250)
+    address = models.TextField()
     uid = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True, related_name='cameras')
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     is_active = models.BooleanField(default=True, verbose_name='camera is activated')
@@ -267,3 +268,35 @@ class Schedule(models.Model):
     def user__username(self):
         return self.user.username
 
+
+#wrong relationship
+class NotificationDevice(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='devices')
+    type = models.CharField(max_length=10)
+    endpoint = models.TextField()
+    device_data = models.TextField(blank=True)
+
+    class Meta:
+        managed = True
+        db_table = 'notificationDevice'
+
+
+class Notification(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, primary_key=True)
+    email_notify = models.BooleanField(default=True)
+    android_notify = models.BooleanField(default=True)
+
+    class Meta:
+        managed = True
+        db_table = 'notification'
+
+
+# create a one on one row on Schedule table after a new user is created
+def create_after_user(sender, instance, created, **kwargs):
+    """Create ModelB for every new ModelA."""
+    if created:
+        Schedule.objects.create(user=instance)
+        Notification.objects.create(user=instance)
+
+signals.post_save.connect(create_after_user, sender=User, weak=False,
+                          dispatch_uid='models.create_after_user')

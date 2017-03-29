@@ -14,7 +14,7 @@ from rest_framework.serializers import (
     RelatedField,
     HyperlinkedRelatedField,
 )
-from .models import User, Viewer, Role, Camera, Schedule
+from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification
 from datetime import datetime, date
 from time import gmtime, time
 from rest_framework_jwt.settings import api_settings
@@ -278,7 +278,6 @@ class ScheduleSerializer(ModelSerializer):
 
 class ScheduleSignalSerializer(ModelSerializer):
     signal = SerializerMethodField()
-    weekday = datetime.utcnow().isoweekday()
 
     def get_signal(self, obj):
         weekday = [obj.monday, obj.tuesday, obj.wednesday, obj.thursday, obj.friday, obj.saturday, obj.sunday]
@@ -312,6 +311,39 @@ class ScheduleSignalSerializer(ModelSerializer):
             'signal',
         )
         lookup_field = 'user__username'
+
+
+class NotificationDeviceSerializer(ModelSerializer):
+    class Meta:
+        model = NotificationDevice
+        fields = [
+            'type',
+            'endpoint',
+            'device_data',
+        ]
+
+    def update(self, instance, validated_data):
+        instance.type = validated_data.get('type', instance.type)
+        instance.endpoint = validated_data.get('endpoint', instance.endpoint)
+        instance.device_data = validated_data.get('device_data', instance.device_data)
+        instance.save()
+        return instance
+
+
+class NotificationSerializer(ModelSerializer):
+    class Meta:
+        model = NotificationDevice
+        fields = [
+            'email_notify',
+            'android_notify',
+        ]
+        lookup_field = 'user__username'
+
+    def update(self, instance, validated_data):
+        instance.email_notify = validated_data.get('email_notify', instance.email_notify)
+        instance.android_notify = validated_data.get('android_notify', instance.android_notify)
+        instance.save()
+        return instance
 
 
 # check current weekday is true/false

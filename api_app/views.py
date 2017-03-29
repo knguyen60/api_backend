@@ -12,7 +12,7 @@ from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import User, Role, Camera, Schedule
+from .models import User, Role, Camera, Schedule, NotificationDevice, Notification
 
 from .serializers import (
     UserCreateSerializer, 
@@ -23,6 +23,8 @@ from .serializers import (
     GoogleTokenSerializer,
     ScheduleSerializer,
     ScheduleSignalSerializer,
+    NotificationDeviceSerializer,
+    NotificationSerializer,
     ViewerSerializer)
 
 from rest_framework import generics
@@ -118,7 +120,19 @@ class ScheduleSignal(generics.RetrieveAPIView):
     lookup_field = 'user__username'
 
 
-# get, post roles
+class NotificationDevice(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = NotificationDevice.objects.all()
+    serializer_class = NotificationDeviceSerializer
+
+
+class NotificationDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    lookup_field = 'user__username'
+
+
 class RoleList(generics.ListCreateAPIView):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
