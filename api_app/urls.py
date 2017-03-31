@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^notification/update/(?P<user__username>[\w.@+-]+)/$', views.NotificationDetail.as_view(), name='notification'),
     url(r'^endpoint/create/$', views.DeviceCreate.as_view(), name='endpoint_create'),
     url(r'^endpoint/detail/(?P<pk>[0-9]+)/$', views.DeviceDetail.as_view(), name='android_token'),
+    url(r'^video/list/(?P<user__username>[\w.@+-]+)/$', views.VideoList.as_view(), name='video_list'),
+    url(r'^video/delete/(?P<pk>[0-9]+)/$', views.VideoDelete.as_view(), name='video_delete'),
     url(r'^role/(?P<pk>[0-9]+)/$', views.RoleDetail.as_view(), name='role_detail'),
     url(r'^role/$', views.RoleList.as_view(), name='role'),
     url(r'^auth/token/', obtain_jwt_token),

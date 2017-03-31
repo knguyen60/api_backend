@@ -12,7 +12,7 @@ from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import User, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint
+from .models import User, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint, VideoPath
 
 from .serializers import (
     UserCreateSerializer, 
@@ -26,6 +26,7 @@ from .serializers import (
     NotificationDeviceSerializer,
     NotificationSerializer,
     DeviceEndpointSerializer,
+    VideoPathSerializer,
     ViewerSerializer)
 
 from rest_framework import generics
@@ -147,6 +148,19 @@ class DeviceDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = DeviceEndpoint.objects.all()
     serializer_class = DeviceEndpointSerializer
+
+
+class VideoList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = VideoPath.objects.all()
+    serializer_class = VideoPathSerializer
+    lookup_field = 'user__username'
+
+
+class VideoDelete(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = VideoPath.objects.all()
+    serializer_class = VideoPathSerializer
 
 
 class RoleList(generics.ListCreateAPIView):

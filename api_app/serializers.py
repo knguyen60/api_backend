@@ -14,7 +14,7 @@ from rest_framework.serializers import (
     RelatedField,
     HyperlinkedRelatedField,
 )
-from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint
+from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint, VideoPath
 from datetime import datetime, date
 from time import gmtime, time
 from rest_framework_jwt.settings import api_settings
@@ -359,6 +359,17 @@ class DeviceEndpointSerializer(ModelSerializer):
         instance.device_data = validated_data.get('device_data', instance.device_data)
         instance.save()
         return instance
+
+
+class VideoPathSerializer(ModelSerializer):
+    class Meta:
+        model = VideoPath
+        fields =[
+            'id',
+            'path',
+        ]
+        lookup_field = 'user__username'
+
 
 # check current weekday is true/false
 # current is an integer 0-6

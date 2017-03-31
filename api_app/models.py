@@ -291,7 +291,6 @@ class Notification(models.Model):
         db_table = 'notification'
 
 
-
 class DeviceEndpoint(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='device_endpoint')
@@ -301,6 +300,17 @@ class DeviceEndpoint(models.Model):
     class Meta:
         managed = True
         db_table = 'deviceEndpoint'
+
+
+class VideoPath(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='video_path')
+    path = models.URLField()
+
+    class Meta:
+        managed = True
+        db_table = 'videoPath'
+
 
 # create a one on one row on Schedule table after a new user is created
 def create_after_user(sender, instance, created, **kwargs):
