@@ -12,7 +12,7 @@ from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .models import User, Role, Camera, Schedule, NotificationDevice, Notification
+from .models import User, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint
 
 from .serializers import (
     UserCreateSerializer, 
@@ -25,6 +25,7 @@ from .serializers import (
     ScheduleSignalSerializer,
     NotificationDeviceSerializer,
     NotificationSerializer,
+    DeviceEndpointSerializer,
     ViewerSerializer)
 
 from rest_framework import generics
@@ -131,6 +132,21 @@ class NotificationDetail(generics.RetrieveUpdateAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     lookup_field = 'user__username'
+
+
+class DeviceCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = DeviceEndpoint.objects.all()
+    serializer_class = DeviceEndpointSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class DeviceDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = DeviceEndpoint.objects.all()
+    serializer_class = DeviceEndpointSerializer
 
 
 class RoleList(generics.ListCreateAPIView):

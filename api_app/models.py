@@ -291,6 +291,17 @@ class Notification(models.Model):
         db_table = 'notification'
 
 
+
+class DeviceEndpoint(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='device_endpoint')
+    endpoint = models.TextField()
+    device_data = models.TextField(blank=True)
+
+    class Meta:
+        managed = True
+        db_table = 'deviceEndpoint'
+
 # create a one on one row on Schedule table after a new user is created
 def create_after_user(sender, instance, created, **kwargs):
     """Create ModelB for every new ModelA."""

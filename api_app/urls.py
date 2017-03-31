@@ -17,9 +17,10 @@ urlpatterns = [
     url(r'^schedule/detail/(?P<user__username>[\w.@+-]+)/$', views.ScheduleDetail.as_view(), name='schedule_detail'),
     url(r'^schedule/signal/(?P<user__username>[\w.@+-]+)/$', views.ScheduleSignal.as_view(), name='schedule_signal'),
     url(r'^notification/update/(?P<user__username>[\w.@+-]+)/$', views.NotificationDetail.as_view(), name='notification'),
+    url(r'^endpoint/create/$', views.DeviceCreate.as_view(), name='endpoint_create'),
+    url(r'^endpoint/detail/(?P<pk>[0-9]+)/$', views.DeviceDetail.as_view(), name='android_token'),
     url(r'^role/(?P<pk>[0-9]+)/$', views.RoleDetail.as_view(), name='role_detail'),
     url(r'^role/$', views.RoleList.as_view(), name='role'),
-    url(r'^role/(?P<pk>[0-9]+)/$', views.RoleDetail.as_view(), name='role_detail'),
     url(r'^auth/token/', obtain_jwt_token),
     url(r'^auth/token/refresh/', refresh_jwt_token),
     url(r'^auth/token/verify/', verify_jwt_token)
