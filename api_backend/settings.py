@@ -267,8 +267,8 @@ DJOSER = {
 
 ##Using aws web service
 EMAIL_BACKEND = 'django_ses.SESBackend'
-AWS_ACCESS_KEY_ID = 'AKIAI4E6TASIAIKIR3MA'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 AWS_SES_REGION_NAME = 'us-east-1'
 AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
 DEFAULT_FROM_EMAIL = 'khanhnguyen19101989@gmail.com'
