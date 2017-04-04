@@ -152,9 +152,17 @@ class DeviceDetail(generics.RetrieveUpdateAPIView):
 
 class VideoList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = VideoPath.objects.all()
+    queryset = VideoPath.objects.filter(user__username="hello").select_related('user')
     serializer_class = VideoPathSerializer
     lookup_field = 'user__username'
+
+    # def get(self, request, format=None):
+    #     queryset = VideoPath.objects.filter(user_id=self.request.user)
+    #     serializer = VideoPathSerializer(queryset, data= self.request, many=True)
+    #     if serializer.is_valid(raise_exception=True):
+    #         new_data = serializer.data
+    #         return Response(new_data, status=HTTP_200_OK)
+    #     return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class VideoDelete(generics.DestroyAPIView):
