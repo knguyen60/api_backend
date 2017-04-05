@@ -17,6 +17,7 @@ from rest_framework.serializers import (
 )
 from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint, VideoPath
 from datetime import datetime, date
+from dateutil import tz
 from time import gmtime, time
 from rest_framework_jwt.settings import api_settings
 
@@ -162,6 +163,7 @@ class UserLoginSerializer(ModelSerializer):
 
         data["id"] = user_obj.id
         data["email"] = user_obj.email
+        data["username"] = user_obj.username
         data["token"] = jwt_encode_handler(payload)
         data["full_name"] = user_obj.get_full_name()
         data["dropbox_token"] = user_obj.dropbox_token
@@ -244,7 +246,7 @@ class ScheduleSerializer(ModelSerializer):
 
     def get_signal(self, obj):
         weekday = [obj.monday, obj.tuesday, obj.wednesday, obj.thursday, obj.friday, obj.saturday, obj.sunday]
-        current = datetime.now()
+        current = convertUTCtoEST(datetime.utcnow())
         current_weekday = current.weekday()
         current_time = current.time()
 
@@ -282,7 +284,7 @@ class ScheduleSignalSerializer(ModelSerializer):
 
     def get_signal(self, obj):
         weekday = [obj.monday, obj.tuesday, obj.wednesday, obj.thursday, obj.friday, obj.saturday, obj.sunday]
-        current = datetime.now()
+        current = convertUTCtoEST(datetime.utcnow())
         current_weekday = current.weekday()
         current_time = current.time()
 
@@ -391,4 +393,22 @@ def check_time(start, end, now):
         return start <= now or now <= end
 
 
+def convertUTCtoEST(utc):
+    # METHOD 1: Hardcode zones:
+    from_zone = tz.gettz('UTC')
+    to_zone = tz.gettz('America/New_York')
 
+    # METHOD 2: Auto-detect zones:
+    # from_zone = tz.tzutc()
+    # to_zone = tz.tzlocal()
+
+    # utc = datetime.utcnow()
+    # utc = datetime.strptime('2011-01-21 02:37:21', '%Y-%m-%d %H:%M:%S')
+
+    # Tell the datetime object that it's in UTC time zone since
+    # datetime objects are 'naive' by default
+    utc = utc.replace(tzinfo=from_zone)
+
+    # Convert time zone
+    local = utc.astimezone(to_zone)
+    return local

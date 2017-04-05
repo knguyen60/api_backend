@@ -155,6 +155,12 @@ class VideoList(generics.ListAPIView):
     queryset = VideoPath.objects.filter(user__username="hello").select_related('user')
     serializer_class = VideoPathSerializer
     lookup_field = 'user__username'
+    lookup_url_kwarg = 'user__username'
+
+    def get_queryset(self):
+        user_name = self.kwargs.get(self.lookup_url_kwarg)
+        queryset = VideoPath.objects.filter(user__username=user_name).select_related('user')
+        return queryset
 
     # def get(self, request, format=None):
     #     queryset = VideoPath.objects.filter(user_id=self.request.user)
