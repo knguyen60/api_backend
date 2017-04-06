@@ -306,6 +306,8 @@ class VideoPath(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='video_path')
     path = models.URLField()
+    size = models.FloatField(default=0.0,blank=True)
+    thumbnail = models.URLField(blank= True)
 
     class Meta:
         managed = True

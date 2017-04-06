@@ -373,6 +373,8 @@ class VideoPathSerializer(ModelSerializer):
         fields =[
             'id',
             'path',
+            'thumbnail',
+            'size',
             'delete',
         ]
         lookup_field = 'user__username'
