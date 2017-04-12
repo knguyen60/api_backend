@@ -372,6 +372,7 @@ class VideoPathSerializer(ModelSerializer):
         model = VideoPath
         fields =[
             'id',
+            'video_name',
             'path',
             'thumbnail',
             'size',
