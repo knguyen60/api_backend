@@ -6,6 +6,7 @@ from rest_framework.serializers import (
     BooleanField,
     TimeField,
     DateField,
+    DateTimeField,
     ModelSerializer,
     HyperlinkedModelSerializer,
     SerializerMethodField,
@@ -367,7 +368,7 @@ class DeviceEndpointSerializer(ModelSerializer):
 class VideoPathSerializer(ModelSerializer):
 
     delete = HyperlinkedIdentityField(view_name='video_delete')
-
+    created_time = DateTimeField(format='%d %b %Y %I:%M %p')
     class Meta:
         model = VideoPath
         fields =[
@@ -376,6 +377,8 @@ class VideoPathSerializer(ModelSerializer):
             'path',
             'thumbnail',
             'size',
+            'cam',
+            'created_time',
             'delete',
         ]
         lookup_field = 'user__username'

@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
@@ -152,14 +151,16 @@ class DeviceDetail(generics.RetrieveUpdateAPIView):
 
 class VideoList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = VideoPath.objects.filter(user__username="hello").select_related('user')
+    queryset = VideoPath.objects.filter(user__username='user__username').select_related('user').order_by('-created_time')
     serializer_class = VideoPathSerializer
     lookup_field = 'user__username'
     lookup_url_kwarg = 'user__username'
+    # filter_backends = (filters.OrderingFilter,)
+    # ordering_fields = ('cam', 'created_time')
 
     def get_queryset(self):
         user_name = self.kwargs.get(self.lookup_url_kwarg)
-        queryset = VideoPath.objects.filter(user__username=user_name).select_related('user')
+        queryset = VideoPath.objects.filter(user__username=user_name).select_related('user').order_by('-created_time')
         return queryset
 
     # def get(self, request, format=None):

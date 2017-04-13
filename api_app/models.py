@@ -10,8 +10,28 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from datetime import datetime
+from dateutil import tz
 from django.db.models import signals
 
+def convertUTCtoEST(utc):
+    # METHOD 1: Hardcode zones:
+    from_zone = tz.gettz('UTC')
+    to_zone = tz.gettz('America/New_York')
+
+    # METHOD 2: Auto-detect zones:
+    # from_zone = tz.tzutc()
+    # to_zone = tz.tzlocal()
+
+    # utc = datetime.utcnow()
+    # utc = datetime.strptime('2011-01-21 02:37:21', '%Y-%m-%d %H:%M:%S')
+
+    # Tell the datetime object that it's in UTC time zone since
+    # datetime objects are 'naive' by default
+    utc = utc.replace(tzinfo=from_zone)
+
+    # Convert time zone
+    local = utc.astimezone(to_zone)
+    return local
 
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=80)
@@ -309,10 +329,13 @@ class VideoPath(models.Model):
     path = models.URLField()
     size = models.FloatField(default=0.0,blank=True)
     thumbnail = models.URLField(blank= True)
-
+    created_time= models.DateTimeField( blank=True)
+    cam = models.CharField(max_length= 250, blank=True)
     class Meta:
         managed = True
         db_table = 'videoPath'
+
+
 
 
 # create a one on one row on Schedule table after a new user is created

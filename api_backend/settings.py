@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_ses',
     'adminplus',
-
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -140,13 +139,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -176,7 +175,9 @@ REST_FRAMEWORK = {
        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
 
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+
+
 
 }
 

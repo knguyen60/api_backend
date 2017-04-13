@@ -10,15 +10,6 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-class ApiAppVideopath(models.Model):
-    path = models.CharField(max_length=200)
-    user = models.ForeignKey('User', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'api_app_videopath'
-
-
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=80)
 
@@ -242,6 +233,20 @@ class User(models.Model):
     class Meta:
         managed = False
         db_table = 'user'
+
+
+class Videopath(models.Model):
+    path = models.CharField(max_length=200)
+    thumbnail = models.CharField(max_length=200)
+    user = models.ForeignKey(User, models.DO_NOTHING)
+    size = models.FloatField()
+    video_name = models.TextField()
+    cam = models.CharField(max_length=250)
+    created_time = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'videoPath'
 
 
 class Viewer(models.Model):
