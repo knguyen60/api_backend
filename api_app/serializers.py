@@ -21,7 +21,7 @@ from datetime import datetime, date
 from dateutil import tz
 from time import gmtime, time
 from rest_framework_jwt.settings import api_settings
-
+from common.serializers import DateTimeFieldWihTZ
 # User= get_user_model()
 
 
@@ -368,7 +368,7 @@ class DeviceEndpointSerializer(ModelSerializer):
 class VideoPathSerializer(ModelSerializer):
 
     delete = HyperlinkedIdentityField(view_name='video_delete')
-    created_time = DateTimeField(format='%d %b %Y %I:%M %p')
+    created_time = DateTimeFieldWihTZ(format='%d %b %Y %I:%M %p')
     class Meta:
         model = VideoPath
         fields =[

@@ -25,6 +25,11 @@ class DeviceAdmin(admin.ModelAdmin):
 admin.site.register(models.NotificationDevice, DeviceAdmin)
 
 
+class VideoPathAdmin(admin.ModelAdmin):
+    list_display = ['video_name','created_time']
+admin.site.register(models.VideoPath, VideoPathAdmin)
+
+
 class NotificationAdmin(admin.ModelAdmin):
     list_display = ['user', 'email_notify', 'android_notify']
 admin.site.register(models.Notification, NotificationAdmin)
