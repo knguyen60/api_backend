@@ -217,8 +217,8 @@ JWT_AUTH = {
 }
 
 DJOSER = {
-    # 'DOMAIN': 'frontend.com',
-    # 'SITE_NAME': 'Frontend',
+    'DOMAIN': 'sites.motiondetect.net',
+    'SITE_NAME': 'motiondetect',
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
@@ -272,4 +272,4 @@ AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 AWS_SES_REGION_NAME = 'us-east-1'
 AWS_SES_REGION_ENDPOINT = 'email.us-east-1.amazonaws.com'
-DEFAULT_FROM_EMAIL = 'khanhnguyen19101989@gmail.com'
+DEFAULT_FROM_EMAIL = 'team@motiondetect.net'

@@ -1,3 +1,5 @@
+from datetime import datetime, date
+from dateutil import tz
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from rest_framework.serializers import (
@@ -16,12 +18,13 @@ from rest_framework.serializers import (
     HyperlinkedRelatedField,
     HyperlinkedIdentityField,
 )
-from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint, VideoPath
-from datetime import datetime, date
-from dateutil import tz
-from time import gmtime, time
 from rest_framework_jwt.settings import api_settings
+from time import gmtime, time
+
 from common.serializers import DateTimeFieldWihTZ
+from .models import User, Viewer, Role, Camera, Schedule, NotificationDevice, Notification, DeviceEndpoint, VideoPath
+
+
 # User= get_user_model()
 
 
@@ -239,11 +242,27 @@ class GoogleTokenSerializer(ModelSerializer):
         instance.save()
         return instance
 
+class NotificationSerializer(ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = [
+            'email_notify',
+            'android_notify',
+        ]
+        lookup_field = 'user__username'
+
+    def update(self, instance, validated_data):
+        instance.email_notify = validated_data.get('email_notify', instance.email_notify)
+        instance.android_notify = validated_data.get('android_notify', instance.android_notify)
+        instance.save()
+        return instance
 
 class ScheduleSerializer(ModelSerializer):
     # username = CharField(source='user.username')
     # user = UserSerializer(required=False)
     signal = SerializerMethodField()
+    # notifications = NotificationSerializer(read_only= True)
+    # test = CharField(read_only=True)
 
     def get_signal(self, obj):
         weekday = [obj.monday, obj.tuesday, obj.wednesday, obj.thursday, obj.friday, obj.saturday, obj.sunday]
@@ -257,6 +276,8 @@ class ScheduleSerializer(ModelSerializer):
 
         else:
             return False
+
+
 
     class Meta:
         model = Schedule
@@ -275,9 +296,11 @@ class ScheduleSerializer(ModelSerializer):
             'time_from',
             'time_to',
             'signal',
+
         ]
 
         lookup_field = 'user__username'
+
 
 
 class ScheduleSignalSerializer(ModelSerializer):
@@ -334,20 +357,6 @@ class NotificationDeviceSerializer(ModelSerializer):
         return instance
 
 
-class NotificationSerializer(ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = [
-            'email_notify',
-            'android_notify',
-        ]
-        lookup_field = 'user__username'
-
-    def update(self, instance, validated_data):
-        instance.email_notify = validated_data.get('email_notify', instance.email_notify)
-        instance.android_notify = validated_data.get('android_notify', instance.android_notify)
-        instance.save()
-        return instance
 
 
 class DeviceEndpointSerializer(ModelSerializer):
